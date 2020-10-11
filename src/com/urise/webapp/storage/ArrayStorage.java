@@ -32,7 +32,7 @@ public class ArrayStorage {
                     size++;
                     break;
                 }
-                if (storage[i].getUuid().equals(r.getUuid())) {
+                if (r.getUuid().equals(storage[i].getUuid())) {
                     System.out.println("This resume is already exists");
                     break;
                 }
@@ -44,11 +44,15 @@ public class ArrayStorage {
 
     public void update(Resume resume) {
         if(!checkIsEmpty()) {
-            for (int i = 0; i < size; i++) {
-                if (resume.equals(storage[i])) {
-                    storage[i] = resume;
-                    System.out.println("The update " + storage[i] + " is completed");
-                    break;
+            if(resume == null) {
+                System.out.println("Have no this resume to update");
+            } else {
+                for (int i = 0; i < size; i++) {
+                    if (storage[i].equals(resume)) {
+                        storage[i] = resume;
+                        System.out.println("The update " + storage[i] + " is completed");
+                        break;
+                    }
                 }
             }
         }
