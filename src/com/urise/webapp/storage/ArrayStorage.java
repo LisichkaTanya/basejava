@@ -100,9 +100,7 @@ public class ArrayStorage {
      * @return array, contains only Resumes in storage (without null)
      */
     public Resume[] getAll() {
-        Resume[] resumes = new Resume[size];
-        resumes = Arrays.copyOf(storage, size);
-        return resumes;
+        return Arrays.copyOf(storage, size);
     }
 
     public int size() {
