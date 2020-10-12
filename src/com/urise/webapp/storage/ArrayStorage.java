@@ -7,6 +7,7 @@ import java.util.Arrays;
 /**
  * Array based storage for Resumes
  */
+
 public class ArrayStorage {
     private Resume[] storage = new Resume[10_000];
     private int size = 0;
@@ -51,7 +52,6 @@ public class ArrayStorage {
                 resume.setUuid(uuid);
                 return resume;
             }
-            resume.setUuid("Have no this resume");
         }
         return resume;
     }
