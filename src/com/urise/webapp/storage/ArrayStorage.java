@@ -39,6 +39,9 @@ public class ArrayStorage {
         int index = getIndex(uuid);
         if (index != -1) {
             return storage[index];
+        } else {
+            System.out.println("Have no this resume '" + uuid + "'");
+
         }
         return null;
     }
