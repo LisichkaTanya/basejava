@@ -9,16 +9,8 @@ import java.util.Arrays;
  */
 
 public class ArrayStorage {
-    private Resume[] storage = new Resume[10_000];
+    private final Resume[] storage = new Resume[10_000];
     private int size = 0;
-
-    public boolean checkIsEmpty() {
-        if (size == 0) {
-            System.out.println("Storage is empty!");
-            return true;
-        }
-        return false;
-    }
 
     public void save(Resume resume) {
         if (size <= storage.length) {
@@ -26,7 +18,7 @@ public class ArrayStorage {
                 storage[size] = resume;
                 size++;
             } else {
-                System.out.println("This resume is already exists");
+                System.out.println("This resume '" + resume.getUuid() +"' is already exists");
             }
         } else {
             System.out.println("storage is full");
@@ -34,53 +26,42 @@ public class ArrayStorage {
     }
 
     public void update(Resume resume) {
-        if (!checkIsEmpty()) {
-            int index = getIndex(resume.getUuid());
-            if (index == -1) {
-                System.out.println("Have no this resume to update");
-            } else {
-                storage[index] = resume;
-                System.out.println("Update " + storage[index] + " is completed");
-            }
+        int index = getIndex(resume.getUuid());
+        if (index == -1) {
+            System.out.println("Have no this resume '" + resume.getUuid() + "' to update");
+        } else {
+            storage[index] = resume;
+            System.out.println("Update '" + storage[index] + "' is completed");
         }
     }
 
     public Resume get(String uuid) {
-        Resume resume = new Resume();
-        if (!checkIsEmpty()) {
-            if (getIndex(uuid) != -1) {
-                resume.setUuid(uuid);
-                return resume;
-            }
+        int index = getIndex(uuid);
+        if (index != -1) {
+            return storage[index];
         }
-        return resume;
+        return null;
     }
 
     public void delete(String uuid) {
-        if (!checkIsEmpty()) {
-            int index = getIndex(uuid);
-            if (index != -1) {
-                if (index == size - 1) {
-                    storage[index] = null;
-                } else {
-                    for (int i = index; i < size - 1; i++) {
-                        storage[i] = storage[i + 1];
-                    }
-                }
-                storage[size - 1] = null;
-                size--;
-            } else {
-                System.out.println("Have no this resume to delete");
-
+        int index = getIndex(uuid);
+        if (index != -1) {
+            if (size - 1 - index >= 0) {
+                System.arraycopy(storage, index + 1, storage, index, size - 1 - index);
             }
+            storage[size - 1] = null;
+            size--;
+        } else {
+            System.out.println("Have no this resume '" + uuid + "' to delete");
         }
     }
 
     /**
      * This method checks whether the object is already in storage
+     *
      * @return number of index if resume in storage and return "-1" if resume is not in storage
      */
-    public int getIndex(String uuid) {
+    private int getIndex(String uuid) {
         for (int i = 0; i < size; i++) {
             if (uuid.equals(storage[i].getUuid())) {
                 return i;
@@ -90,10 +71,8 @@ public class ArrayStorage {
     }
 
     public void clear() {
-        if (!checkIsEmpty()) {
-            Arrays.fill(storage, null);
-            size = 0;
-        }
+        Arrays.fill(storage, 0, size, null);
+        size = 0;
     }
 
     /**
