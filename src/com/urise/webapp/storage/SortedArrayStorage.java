@@ -5,10 +5,10 @@ import com.urise.webapp.model.Resume;
 import java.util.Arrays;
 
 /**
- * Array based storage for Resumes
+ * Sorted array based storage for Resumes
  */
 
-public class ArrayStorage extends AbstractArrayStorage {
+public class SortedArrayStorage extends AbstractArrayStorage {
 
     public void save(Resume resume) {
         if (size <= storage.length) {
@@ -33,6 +33,17 @@ public class ArrayStorage extends AbstractArrayStorage {
         }
     }
 
+    public Resume get(String uuid) {
+        int index = getIndex(uuid);
+        if (index != -1) {
+            return storage[index];
+        } else {
+            System.out.println("Have no this resume '" + uuid + "'");
+
+        }
+        return null;
+    }
+
     public void delete(String uuid) {
         int index = getIndex(uuid);
         if (index != -1) {
@@ -46,13 +57,15 @@ public class ArrayStorage extends AbstractArrayStorage {
         }
     }
 
+    /**
+     * This method checks whether the object is already in storage
+     *
+     * @return number of index if resume in storage and return "-1" if resume is not in storage
+     */
     protected int getIndex(String uuid) {
-        for (int i = 0; i < size; i++) {
-            if (uuid.equals(storage[i].getUuid())) {
-                return i;
-            }
-        }
-        return -1;
+        Resume resume = new Resume();
+        resume.setUuid(uuid);
+        return Arrays.binarySearch(storage, 0, size, resume);
     }
 
     public void clear() {
@@ -66,4 +79,5 @@ public class ArrayStorage extends AbstractArrayStorage {
     public Resume[] getAll() {
         return Arrays.copyOf(storage, size);
     }
+
 }
