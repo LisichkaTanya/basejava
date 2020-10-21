@@ -13,17 +13,24 @@ public abstract class AbstractArrayStorage implements Storage {
     protected final Resume[] storage = new Resume[STORAGE_LIMIT];
     protected int size = 0;
 
+
     public int size() {
         return size;
     }
 
+    /**
+     * @return array, contains only Resumes in storage (without null)
+     */
+    public Resume[] getAll() {
+        return Arrays.copyOf(storage, size);
+    }
+
     public Resume get(String uuid) {
         int index = getIndex(uuid);
-        if (index >= 0) {
-            return storage[index];
-        } else {
+        if (index < 0) {
             System.out.println("Have no this resume '" + uuid + "'");
-
+        } else {
+            return storage[index];
         }
         return null;
     }
@@ -42,12 +49,13 @@ public abstract class AbstractArrayStorage implements Storage {
             if (index > 0) {
                 System.out.println("This resume '" + resume.getUuid() +"' is already exists");
             } else {
-                add(resume);
+                add(resume, index);
+                size++;
             }
         }
     }
 
-    protected abstract void add(Resume resume);
+    protected abstract void add(Resume resume, int index);
 
 
     public void update(Resume resume) {
@@ -62,26 +70,19 @@ public abstract class AbstractArrayStorage implements Storage {
 
     public void delete(String uuid) {
         int index = getIndex(uuid);
-        if (index >= 0) {
+        if (index < 0) {
+            System.out.println("Have no this resume '" + uuid + "' to delete");
+        } else {
             if (size - 1 - index >= 0) {
                 System.arraycopy(storage, index + 1, storage, index, size - 1 - index);
             }
             storage[size - 1] = null;
             size--;
-        } else {
-            System.out.println("Have no this resume '" + uuid + "' to delete");
         }
     }
 
     public void clear() {
         Arrays.fill(storage, 0, size, null);
         size = 0;
-    }
-
-    /**
-     * @return array, contains only Resumes in storage (without null)
-     */
-    public Resume[] getAll() {
-        return Arrays.copyOf(storage, size);
     }
 }

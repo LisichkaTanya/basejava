@@ -8,9 +8,8 @@ import com.urise.webapp.model.Resume;
 
 public class ArrayStorage extends AbstractArrayStorage {
 
-    protected void add(Resume resume) {
+    protected void add(Resume resume, int index) {
         storage[size] = resume;
-        size++;
     }
 
     protected int getIndex(String uuid) {
