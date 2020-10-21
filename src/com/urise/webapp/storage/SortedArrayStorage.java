@@ -10,12 +10,19 @@ import java.util.Arrays;
 
 public class SortedArrayStorage extends AbstractArrayStorage {
 
-    protected void add(Resume resume, int index) {
-        int insertIdx = -(index) - 1;
+    @Override
+    protected void addElement(Resume resume, int index) {
+        int insertIdx = -index - 1;
         System.arraycopy(storage, insertIdx, storage, insertIdx + 1, size - insertIdx);
         storage[insertIdx] = resume;
     }
 
+    @Override
+    protected void removeElement(int index) {
+        System.arraycopy(storage, index + 1, storage, index, size - 1 - index);
+    }
+
+    @Override
     protected int getIndex(String uuid) {
         Resume resume = new Resume();
         resume.setUuid(uuid);
