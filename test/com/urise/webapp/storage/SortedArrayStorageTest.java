@@ -1,30 +1,10 @@
 package com.urise.webapp.storage;
 
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
 
-import static org.junit.Assert.*;
+public class SortedArrayStorageTest extends AbstractArrayStorageTest {
 
-public class SortedArrayStorageTest {
-
-    @Before
-    public void setUp() throws Exception {
+    public SortedArrayStorageTest() {
+        super(new SortedArrayStorage());
     }
 
-    @After
-    public void tearDown() throws Exception {
-    }
-
-    @Test
-    public void addElement() {
-    }
-
-    @Test
-    public void removeElement() {
-    }
-
-    @Test
-    public void getIndex() {
-    }
 }
