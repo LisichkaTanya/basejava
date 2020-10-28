@@ -8,12 +8,10 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
-import javax.print.attribute.standard.PresentationDirection;
-
 import static org.junit.Assert.*;
 
 public abstract class AbstractArrayStorageTest {
-    private Storage storage;
+    private final Storage storage;
     private static final String UUID_1 = "uuid1";
     private static final Resume r1 = new Resume(UUID_1);
     private static final String UUID_2 = "uuid2";
@@ -77,7 +75,7 @@ public abstract class AbstractArrayStorageTest {
             for (int i = 3; i < AbstractArrayStorage.STORAGE_LIMIT; i++) {
                 storage.save(new Resume());
             }
-        } catch (Exception e) {
+        } catch (StorageException e) {
             fail("overflow happened ahead of time");
         }
         storage.save(new Resume());
@@ -105,7 +103,7 @@ public abstract class AbstractArrayStorageTest {
     @Test
     public void clear() {
         storage.clear();
-        assertEquals(0, storage.size());
+        assertEquals(0, storage.getAll().length);
     }
 
 }
