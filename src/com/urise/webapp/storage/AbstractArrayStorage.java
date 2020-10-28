@@ -16,7 +16,6 @@ public abstract class AbstractArrayStorage implements Storage {
     protected final Resume[] storage = new Resume[STORAGE_LIMIT];
     protected int size = 0;
 
-
     public int size() {
         return size;
     }
@@ -32,8 +31,6 @@ public abstract class AbstractArrayStorage implements Storage {
         int index = getIndex(uuid);
         if (index < 0) {
             throw new NotExistStorageException(uuid);
-            //System.out.println("Have no this resume '" + uuid + "'");
-            //return null;
         }
         return storage[index];
     }
@@ -41,12 +38,10 @@ public abstract class AbstractArrayStorage implements Storage {
     public void save(Resume resume) {
         if (size >= storage.length) {
             throw new StorageException("Storage overflow", resume.getUuid());
-            //System.out.println("Storage is full");
         } else {
             int index = getIndex(resume.getUuid());
             if (index >= 0) {
                 throw new ExistStorageException(resume.getUuid());
-                //System.out.println("This resume '" + resume.getUuid() + "' is already exists");
             } else {
                 addElement(resume, index);
                 size++;
@@ -58,7 +53,6 @@ public abstract class AbstractArrayStorage implements Storage {
         int index = getIndex(resume.getUuid());
         if (index < 0) {
             throw new NotExistStorageException(resume.getUuid());
-            //System.out.println("Have no this resume '" + resume.getUuid() + "' to update");
         } else {
             storage[index] = resume;
             System.out.println("Update '" + storage[index] + "' is completed");
@@ -69,7 +63,6 @@ public abstract class AbstractArrayStorage implements Storage {
         int index = getIndex(uuid);
         if (index < 0) {
             throw new NotExistStorageException(uuid);
-            //System.out.println("Have no this resume '" + uuid + "' to delete");
         } else {
             removeElement(index);
             storage[size - 1] = null;

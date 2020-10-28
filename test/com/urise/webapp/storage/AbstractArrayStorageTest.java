@@ -13,13 +13,13 @@ import javax.print.attribute.standard.PresentationDirection;
 import static org.junit.Assert.*;
 
 public abstract class AbstractArrayStorageTest {
-    Storage storage;
-    private final String UUID_1 = "uuid1";
-    Resume r1 = new Resume(UUID_1);
-    private final String UUID_2 = "uuid2";
-    Resume r2 = new Resume(UUID_2);
-    private final String UUID_3 = "uuid3";
-    Resume r3 = new Resume(UUID_3);
+    private Storage storage;
+    private static final String UUID_1 = "uuid1";
+    private static final Resume r1 = new Resume(UUID_1);
+    private static final String UUID_2 = "uuid2";
+    private static final Resume r2 = new Resume(UUID_2);
+    private static final String UUID_3 = "uuid3";
+    private static final Resume r3 = new Resume(UUID_3);
 
     public AbstractArrayStorageTest(Storage storage) {
         this.storage = storage;
@@ -44,7 +44,7 @@ public abstract class AbstractArrayStorageTest {
 
     @Test
     public void getAll() {
-        Resume[] resumes = new Resume[] {r1, r2, r3};
+        Resume[] resumes = new Resume[]{r1, r2, r3};
         assertArrayEquals(resumes, storage.getAll());
     }
 
@@ -73,11 +73,12 @@ public abstract class AbstractArrayStorageTest {
 
     @Test(expected = StorageException.class)
     public void saveOverFlow() {
-        for (int i = 3; i < AbstractArrayStorage.STORAGE_LIMIT; i++) {
-            storage.save(new Resume());
-            if (storage.size() > AbstractArrayStorage.STORAGE_LIMIT) {
-                fail("overflow happened ahead of time");
+        try {
+            for (int i = 3; i < AbstractArrayStorage.STORAGE_LIMIT; i++) {
+                storage.save(new Resume());
             }
+        } catch (Exception e) {
+            fail("overflow happened ahead of time");
         }
         storage.save(new Resume());
     }
@@ -101,11 +102,10 @@ public abstract class AbstractArrayStorageTest {
         storage.get(UUID_2);
     }
 
-    @Test(expected = NotExistStorageException.class)
+    @Test
     public void clear() {
         storage.clear();
         assertEquals(0, storage.size());
-        storage.get(UUID_1);
     }
 
 }
