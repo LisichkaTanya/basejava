@@ -8,7 +8,7 @@ import com.urise.webapp.storage.Storage;
 public class MainTestArrayStorage {
     static final Storage ARRAY_STORAGE = new ArrayStorage();
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws CloneNotSupportedException {
         Resume r1 = new Resume("uuid1");
         Resume r2 = new Resume("uuid2");
         Resume r3 = new Resume("uuid3");
@@ -34,7 +34,7 @@ public class MainTestArrayStorage {
 
     }
 
-    static void printAll() {
+    static void printAll() throws CloneNotSupportedException {
         System.out.println("\nGet All");
         for (Resume r : ARRAY_STORAGE.getAll()) {
             System.out.println(r);

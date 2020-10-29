@@ -14,7 +14,7 @@ import java.io.InputStreamReader;
 public class MainArray {
     private final static Storage ARRAY_STORAGE = new SortedArrayStorage();
 
-    public static void main(String[] args) throws IOException {
+    public static void main(String[] args) throws IOException, CloneNotSupportedException {
         BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
         Resume r;
         while (true) {
@@ -65,7 +65,7 @@ public class MainArray {
         }
     }
 
-    static void printAll() {
+    static void printAll() throws CloneNotSupportedException {
         Resume[] all = ARRAY_STORAGE.getAll();
         System.out.println("----------------------------");
         if (all.length == 0) {

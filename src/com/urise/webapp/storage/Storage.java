@@ -14,7 +14,7 @@ public interface Storage {
 
     void clear();
 
-    Resume[] getAll();
+    Resume[] getAll() throws CloneNotSupportedException;
 
     int size();
 }
