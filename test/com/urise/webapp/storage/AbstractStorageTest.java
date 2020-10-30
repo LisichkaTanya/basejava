@@ -35,27 +35,6 @@ public abstract class AbstractStorageTest {
     }
 
     @Test
-    public void size() {
-        assertEquals(3, storage.size());
-    }
-
-    @Test
-    public void getAll() throws CloneNotSupportedException {
-        Resume[] resumes = new Resume[]{r1, r2, r3};
-        assertArrayEquals(resumes, storage.getAll());
-    }
-
-    @Test
-    public void get() {
-        assertEquals(r2, storage.get(UUID_2));
-    }
-
-    @Test(expected = NotExistStorageException.class)
-    public void getNotExist() {
-        storage.get("dummy");
-    }
-
-    @Test
     public void save() {
         Resume r4 = new Resume("uuid4");
         storage.save(r4);
@@ -95,5 +74,26 @@ public abstract class AbstractStorageTest {
     public void clear() throws CloneNotSupportedException {
         storage.clear();
         assertEquals(0, storage.getAll().length);
+    }
+
+    @Test
+    public void get() {
+        assertEquals(r2, storage.get(UUID_2));
+    }
+
+    @Test(expected = NotExistStorageException.class)
+    public void getNotExist() {
+        storage.get("dummy");
+    }
+
+    @Test
+    public void getAll() throws CloneNotSupportedException {
+        Resume[] resumes = new Resume[]{r1, r2, r3};
+        assertArrayEquals(resumes, storage.getAll());
+    }
+
+    @Test
+    public void size() {
+        assertEquals(3, storage.size());
     }
 }
