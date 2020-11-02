@@ -1,7 +1,5 @@
 package com.urise.webapp.storage;
 
-import com.urise.webapp.exception.ExistStorageException;
-import com.urise.webapp.exception.NotExistStorageException;
 import com.urise.webapp.model.Resume;
 
 import java.util.ArrayList;
@@ -12,18 +10,25 @@ public class ListStorage extends AbstractStorage {
     protected final List<Resume> list = new ArrayList<>();
 
     @Override
-    public void save(Resume resume) {
-        if (list.contains(resume)) {
-            throw new ExistStorageException(resume.getUuid());
-        } else {
-            list.add(resume);
-        }
+    protected void addElement(Resume resume, int index) {
+        list.add(resume);
     }
 
     @Override
     protected void updateElement(Resume resume, int index) {
         list.set(index, resume);
         System.out.println("Update '" + list.get(index) + "' is completed");
+    }
+
+    @Override
+    protected int getIndex(String uuid) {
+        Resume resume = new Resume(uuid);
+        return list.indexOf(resume);
+    }
+
+    @Override
+    protected Resume getElement(int index) {
+        return list.get(index);
     }
 
     @Override
@@ -43,17 +48,6 @@ public class ListStorage extends AbstractStorage {
     @Override
     public int size() {
         return list.size();
-    }
-
-    @Override
-    protected int getIndex(String uuid) {
-        Resume resume = new Resume(uuid);
-        return list.indexOf(resume);
-    }
-
-    @Override
-    protected Resume returnForGet(int index) {
-        return list.get(index);
     }
 
     @Override

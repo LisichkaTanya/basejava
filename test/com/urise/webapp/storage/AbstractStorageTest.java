@@ -10,7 +10,7 @@ import org.junit.Test;
 import static org.junit.Assert.*;
 
 public abstract class AbstractStorageTest {
-    private final Storage storage;
+    protected final Storage storage;
     private static final String UUID_1 = "uuid1";
     private static final Resume r1 = new Resume(UUID_1);
     private static final String UUID_2 = "uuid2";
@@ -60,6 +60,22 @@ public abstract class AbstractStorageTest {
     }
 
     @Test
+    public void get() {
+        assertEquals(r2, storage.get(UUID_2));
+    }
+
+    @Test(expected = NotExistStorageException.class)
+    public void getNotExist() {
+        storage.get("dummy");
+    }
+
+    @Test
+    public void getAll() throws CloneNotSupportedException {
+        Resume[] resumes = new Resume[]{r1, r2, r3};
+        assertArrayEquals(resumes, storage.getAll());
+    }
+
+    @Test
     public void delete() {
         storage.delete(UUID_2);
         assertEquals(2, storage.size());
@@ -74,22 +90,6 @@ public abstract class AbstractStorageTest {
     public void clear() throws CloneNotSupportedException {
         storage.clear();
         assertEquals(0, storage.getAll().length);
-    }
-
-    @Test
-    public void get() {
-        assertEquals(r2, storage.get(UUID_2));
-    }
-
-    @Test(expected = NotExistStorageException.class)
-    public void getNotExist() {
-        storage.get("dummy");
-    }
-
-    @Test
-    public void getAll() throws CloneNotSupportedException {
-        Resume[] resumes = new Resume[]{r1, r2, r3};
-        assertArrayEquals(resumes, storage.getAll());
     }
 
     @Test

@@ -1,9 +1,19 @@
 package com.urise.webapp.storage;
 
+import com.urise.webapp.exception.ExistStorageException;
 import com.urise.webapp.exception.NotExistStorageException;
 import com.urise.webapp.model.Resume;
 
 public abstract class AbstractStorage implements Storage {
+
+    public void save(Resume resume) {
+        int index = getIndex(resume.getUuid());
+        if (index >= 0) {
+            throw new ExistStorageException(resume.getUuid());
+        } else {
+            addElement(resume, index);
+        }
+    }
 
     public void update(Resume resume) {
         int index = getIndex(resume.getUuid());
@@ -19,7 +29,7 @@ public abstract class AbstractStorage implements Storage {
         if (index < 0) {
             throw new NotExistStorageException(uuid);
         }
-        return returnForGet(index);
+        return getElement(index);
     }
 
     public void delete(String uuid) {
@@ -31,6 +41,8 @@ public abstract class AbstractStorage implements Storage {
         }
     }
 
+    protected abstract void addElement(Resume resume, int index);
+
     protected abstract void updateElement(Resume resume, int index);
 
     /**
@@ -38,7 +50,7 @@ public abstract class AbstractStorage implements Storage {
      */
     protected abstract int getIndex(String uuid);
 
-    protected abstract Resume returnForGet(int index);
+    protected abstract Resume getElement(int index);
 
     protected abstract void removeElement(int index);
 }
