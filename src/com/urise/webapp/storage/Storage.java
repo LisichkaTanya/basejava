@@ -10,7 +10,7 @@ public interface Storage {
 
     Resume get(String uuid);
 
-    Resume[] getAll() throws CloneNotSupportedException;
+    Resume[] getAll();
 
     void delete(String uuid);
 

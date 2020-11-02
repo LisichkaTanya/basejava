@@ -70,7 +70,7 @@ public abstract class AbstractStorageTest {
     }
 
     @Test
-    public void getAll() throws CloneNotSupportedException {
+    public void getAll() {
         Resume[] resumes = new Resume[]{r1, r2, r3};
         assertArrayEquals(resumes, storage.getAll());
     }
@@ -87,7 +87,7 @@ public abstract class AbstractStorageTest {
     }
 
     @Test
-    public void clear() throws CloneNotSupportedException {
+    public void clear() {
         storage.clear();
         assertEquals(0, storage.getAll().length);
     }
