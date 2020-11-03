@@ -11,7 +11,7 @@ public class MapStorage extends AbstractStorage {
     private final Map<Integer, Resume> map = new HashMap<>();
 
     @Override
-    protected void addElement(Resume resume, int index) {
+    protected void doSave(Resume resume, int index) {
         map.put(size(), resume);
     }
 
@@ -39,7 +39,7 @@ public class MapStorage extends AbstractStorage {
     }
 
     @Override
-    protected void removeElement(int index) {
+    protected void doDelete(int index) {
         map.remove(index);
     }
 
