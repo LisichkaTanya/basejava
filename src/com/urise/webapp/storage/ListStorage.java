@@ -10,7 +10,7 @@ public class ListStorage extends AbstractStorage {
     private final List<Resume> list = new ArrayList<>();
 
     @Override
-    protected void addElement(Resume resume, int index) {
+    protected void doSave(Resume resume, int index) {
         list.add(resume);
     }
 
@@ -33,11 +33,12 @@ public class ListStorage extends AbstractStorage {
 
     @Override
     public Resume[] getAll() {
-        Resume[] resumes = new Resume[list.size()];
-        for (int i = 0; i < list.size(); i++) {
-            resumes[i] = list.get(i);
-        }
-        return resumes;
+        return list.toArray(new Resume[size()]);
+    }
+
+    @Override
+    protected void doDelete(int index) {
+        list.remove(index);
     }
 
     @Override
@@ -48,10 +49,5 @@ public class ListStorage extends AbstractStorage {
     @Override
     public int size() {
         return list.size();
-    }
-
-    @Override
-    protected void removeElement(int index) {
-        list.remove(index);
     }
 }
