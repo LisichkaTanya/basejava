@@ -7,51 +7,48 @@ import com.urise.webapp.model.Resume;
 public abstract class AbstractStorage implements Storage {
 
     public void save(Resume resume) {
-        int index = getIndex(resume.getUuid());
-        if (index >= 0) {
-            throw new ExistStorageException(resume.getUuid());
-        } else {
-            doSave(resume, index);
-        }
+        doSave(resume, checkNotExistResume(resume));
     }
 
     public void update(Resume resume) {
-        int index = getIndex(resume.getUuid());
-        if (index < 0) {
-            throw new NotExistStorageException(resume.getUuid());
-        } else {
-            updateElement(resume, index);
-        }
+        doUpdate(resume, checkExistResume(resume.getUuid()));
     }
 
     public Resume get(String uuid) {
-        int index = getIndex(uuid);
-        if (index < 0) {
-            throw new NotExistStorageException(uuid);
-        }
-        return getElement(index);
+        return doGet(checkExistResume(uuid));
     }
 
     public void delete(String uuid) {
-        int index = getIndex(uuid);
-        if (index < 0) {
-            throw new NotExistStorageException(uuid);
-        } else {
-            doDelete(index);
-        }
+        doDelete(checkExistResume(uuid));
     }
 
-    protected abstract void doSave(Resume resume, int index);
+    private Object checkNotExistResume(Resume resume) {
+        Object searchKey = getSearchKey(resume.getUuid());
+        if (isExist(searchKey)) {
+            throw new ExistStorageException(resume.getUuid());
+        }
+        return searchKey;
+    }
 
-    protected abstract void updateElement(Resume resume, int index);
+    private Object checkExistResume(String uuid) {
+        Object searchKey = getSearchKey(uuid);
+        if (!isExist(searchKey)) {
+            throw new NotExistStorageException(uuid);
+        }
+        return searchKey;
+    }
 
-    /**
-     * This method should check whether the object is already in storage
-     */
-    protected abstract int getIndex(String uuid);
 
-    protected abstract Resume getElement(int index);
+    protected abstract boolean isExist(Object searchKey);
 
-    protected abstract void doDelete(int index);
+    protected abstract Object getSearchKey(String uuid);
+
+    protected abstract void doSave(Resume resume, Object searchKey);
+
+    protected abstract void doUpdate(Resume resume, Object searchKey);
+
+    protected abstract Resume doGet(Object searchKey);
+
+    protected abstract void doDelete(Object searchKey);
 
 }

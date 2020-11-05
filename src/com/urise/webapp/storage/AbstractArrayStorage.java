@@ -1,7 +1,5 @@
 package com.urise.webapp.storage;
 
-import com.urise.webapp.exception.ExistStorageException;
-import com.urise.webapp.exception.NotExistStorageException;
 import com.urise.webapp.exception.StorageException;
 import com.urise.webapp.model.Resume;
 
@@ -12,43 +10,41 @@ public abstract class AbstractArrayStorage extends AbstractStorage {
     protected final Resume[] storage = new Resume[STORAGE_LIMIT];
     protected int size = 0;
 
-    protected abstract void addElement(Resume resume, int index);
+    protected abstract void addElement(Resume resume, Integer index);
 
     @Override
-    public void doSave(Resume resume, int index) {
+    public void doSave(Resume resume, Object index) {
         if (size >= storage.length) {
             throw new StorageException("Storage overflow", resume.getUuid());
         } else {
-            addElement(resume, index);
+            addElement(resume, (Integer) index);
             size++;
         }
     }
 
-    protected void updateElement(Resume resume, int index) {
-        storage[index] = resume;
-        System.out.println("Update '" + storage[index] + "' is completed");
+    @Override
+    protected void doUpdate(Resume resume, Object index) {
+        storage[(Integer) index] = resume;
+        System.out.println("Update '" + storage[(Integer) index] + "' is completed");
     }
 
     @Override
-    protected Resume getElement(int index) {
-        return storage[index];
+    protected Resume doGet(Object index) {
+        return storage[(Integer) index];
     }
 
-    /**
-     * @return array, contains only Resumes in storage (without null)
-     */
     public Resume[] getAll() {
         return Arrays.copyOf(storage, size);
     }
 
     @Override
-    public void doDelete(int index) {
-        removeElement(index);
+    public void doDelete(Object index) {
+        removeElement((Integer) index);
         storage[size - 1] = null;
         size--;
     }
 
-    protected abstract void removeElement(int index);
+    protected abstract void removeElement(Integer index);
 
     public void clear() {
         Arrays.fill(storage, 0, size, null);

@@ -11,19 +11,24 @@ import java.util.Arrays;
 public class SortedArrayStorage extends AbstractArrayStorage {
 
     @Override
-    protected void addElement(Resume resume, int index) {
-        int insertIdx = -index - 1;
+    protected void addElement(Resume resume, Integer index) {
+        Integer insertIdx = -index - 1;
         System.arraycopy(storage, insertIdx, storage, insertIdx + 1, size - insertIdx);
         storage[insertIdx] = resume;
     }
 
     @Override
-    protected void removeElement(int index) {
+    protected void removeElement(Integer index) {
         System.arraycopy(storage, index + 1, storage, index, size - 1 - index);
     }
 
     @Override
-    protected int getIndex(String uuid) {
+    protected boolean isExist(Object searchKey) {
+        return (Integer)searchKey >= 0;
+    }
+
+    @Override
+    protected Integer getSearchKey(String uuid) {
         Resume resume = new Resume(uuid);
         return Arrays.binarySearch(storage, 0, size, resume);
     }
