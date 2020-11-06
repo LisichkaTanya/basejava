@@ -4,7 +4,6 @@ import com.urise.webapp.model.Resume;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Set;
 
 public class MapStorage extends AbstractStorage {
 
@@ -12,13 +11,13 @@ public class MapStorage extends AbstractStorage {
 
     @Override
     protected void doSave(Resume resume, Object searchKey) {
-        map.put(resume.getUuid(), resume);
+        map.put((String) searchKey, resume);
     }
 
     @Override
-    protected void doUpdate(Resume resume, Object index) {
-        map.put((String) index, resume);
-        System.out.println("Update '" + map.get(index) + "' is completed");
+    protected void doUpdate(Resume resume, Object searchKey) {
+        map.put((String) searchKey, resume);
+        System.out.println("Update '" + map.get(searchKey) + "' is completed");
     }
 
     @Override
@@ -33,19 +32,12 @@ public class MapStorage extends AbstractStorage {
 
     @Override
     protected boolean isExist(Object searchKey) {
-        return searchKey != null;
+        return map.containsKey(searchKey);
     }
 
     @Override
     protected String getSearchKey(String uuid) {
-        Resume resume = new Resume(uuid);
-        Set<Map.Entry<String, Resume>> entrySet = map.entrySet();
-        for (Map.Entry<String, Resume> pair : entrySet) {
-            if (resume.equals(pair.getValue())) {
-                return pair.getKey();
-            }
-        }
-        return null;
+        return uuid;
     }
 
     @Override

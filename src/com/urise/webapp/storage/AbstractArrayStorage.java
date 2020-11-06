@@ -13,6 +13,11 @@ public abstract class AbstractArrayStorage extends AbstractStorage {
     protected abstract void addElement(Resume resume, Integer index);
 
     @Override
+    protected boolean isExist(Object searchKey) {
+        return (Integer)searchKey >= 0;
+    }
+
+    @Override
     public void doSave(Resume resume, Object index) {
         if (size >= storage.length) {
             throw new StorageException("Storage overflow", resume.getUuid());
