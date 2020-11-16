@@ -22,13 +22,17 @@ public class ListStorage extends AbstractStorage {
 
     @Override
     protected boolean isExist(Object searchKey) {
-        return (Integer)searchKey >= 0;
+        return searchKey != null;
     }
 
     @Override
     protected Integer getSearchKey(String uuid) {
-        Resume resume = new Resume(uuid);
-        return list.indexOf(resume);
+        for (int i = 0; i < list.size(); i++) {
+            if (list.get(i).getUuid().equals(uuid)) {
+                return i;
+            }
+        }
+        return null;
     }
 
     @Override
@@ -37,8 +41,8 @@ public class ListStorage extends AbstractStorage {
     }
 
     @Override
-    public Resume[] getAll() {
-        return list.toArray(new Resume[size()]);
+    public List<Resume> doCopyAll() {
+        return new ArrayList<>(list);
     }
 
     @Override

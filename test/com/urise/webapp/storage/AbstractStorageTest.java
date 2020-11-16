@@ -8,17 +8,21 @@ import org.junit.Before;
 import org.junit.Test;
 
 import java.util.Arrays;
+import java.util.List;
 
 import static org.junit.Assert.*;
 
 public abstract class AbstractStorageTest {
     protected final Storage storage;
     private static final String UUID_1 = "uuid1";
-    private static final Resume r1 = new Resume(UUID_1);
+    private static final String NAME_1 = "name1";
+    private static final Resume r1 = new Resume(UUID_1, NAME_1);
     private static final String UUID_2 = "uuid2";
-    private static final Resume r2 = new Resume(UUID_2);
+    private static final String NAME_2 = "name2";
+    private static final Resume r2 = new Resume(UUID_2, NAME_2);
     private static final String UUID_3 = "uuid3";
-    private static final Resume r3 = new Resume(UUID_3);
+    private static final String NAME_3 = "name3";
+    private static final Resume r3 = new Resume(UUID_3, NAME_3);
 
     public AbstractStorageTest(Storage storage) {
         this.storage = storage;
@@ -38,7 +42,7 @@ public abstract class AbstractStorageTest {
 
     @Test
     public void save() {
-        Resume r4 = new Resume("uuid4");
+        Resume r4 = new Resume("uuid4","name4");
         storage.save(r4);
         assertEquals(4, storage.size());
         assertEquals(r4, storage.get("uuid4"));
@@ -51,7 +55,7 @@ public abstract class AbstractStorageTest {
 
     @Test
     public void update() {
-        Resume newResume = new Resume(UUID_1);
+        Resume newResume = new Resume(UUID_1, NAME_1);
         storage.update(newResume);
         assertEquals(newResume, storage.get(UUID_1));
     }
@@ -72,11 +76,10 @@ public abstract class AbstractStorageTest {
     }
 
     @Test
-    public void getAll() {
-        Resume[] expectedResumes = new Resume[]{r1, r2, r3};
-        Resume[] actualResumes = storage.getAll();
-        Arrays.sort(actualResumes);
-        assertArrayEquals(expectedResumes, actualResumes);
+    public void getAllSorted() {
+        List<Resume> list = storage.getAllSorted();
+        assertEquals(list, Arrays.asList(r1, r2, r3));
+        assertEquals(3, list.size());
     }
 
     @Test
@@ -93,7 +96,7 @@ public abstract class AbstractStorageTest {
     @Test
     public void clear() {
         storage.clear();
-        assertEquals(0, storage.getAll().length);
+        assertEquals(0, storage.getAllSorted().size());
     }
 
     @Test

@@ -11,7 +11,6 @@ import java.util.Comparator;
 
 public class SortedArrayStorage extends AbstractArrayStorage {
 
-//    private final static Comparator<Resume> RESUME_COMPARATOR = (o1, o2) -> o1.getUuid().compareTo(o2.getUuid());
     private final static Comparator<Resume> RESUME_COMPARATOR = Comparator.comparing(Resume::getUuid);
 
     @Override
@@ -28,7 +27,7 @@ public class SortedArrayStorage extends AbstractArrayStorage {
 
     @Override
     protected Integer getSearchKey(String uuid) {
-        Resume resume = new Resume(uuid);
+        Resume resume = new Resume(uuid, "SomeName");
         return Arrays.binarySearch(storage, 0, size, resume, RESUME_COMPARATOR);
     }
 

@@ -9,9 +9,9 @@ public class MainTestArrayStorage {
     static final Storage ARRAY_STORAGE = new ArrayStorage();
 
     public static void main(String[] args) throws CloneNotSupportedException {
-        Resume r1 = new Resume("uuid1");
-        Resume r2 = new Resume("uuid2");
-        Resume r3 = new Resume("uuid3");
+        Resume r1 = new Resume("uuid1", "name1");
+        Resume r2 = new Resume("uuid2", "name2");
+        Resume r3 = new Resume("uuid3", "name3");
 
         ARRAY_STORAGE.save(r1);
         ARRAY_STORAGE.save(r2);
@@ -36,7 +36,7 @@ public class MainTestArrayStorage {
 
     static void printAll() throws CloneNotSupportedException {
         System.out.println("\nGet All");
-        for (Resume r : ARRAY_STORAGE.getAll()) {
+        for (Resume r : ARRAY_STORAGE.getAllSorted()) {
             System.out.println(r);
         }
     }
