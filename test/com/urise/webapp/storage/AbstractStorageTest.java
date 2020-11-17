@@ -15,14 +15,11 @@ import static org.junit.Assert.*;
 public abstract class AbstractStorageTest {
     protected final Storage storage;
     private static final String UUID_1 = "uuid1";
-    private static final String NAME_1 = "name1";
-    private static final Resume r1 = new Resume(UUID_1, NAME_1);
+    private static final Resume r1 = new Resume(UUID_1, "name1");
     private static final String UUID_2 = "uuid2";
-    private static final String NAME_2 = "name2";
-    private static final Resume r2 = new Resume(UUID_2, NAME_2);
+    private static final Resume r2 = new Resume(UUID_2, "name2");
     private static final String UUID_3 = "uuid3";
-    private static final String NAME_3 = "name3";
-    private static final Resume r3 = new Resume(UUID_3, NAME_3);
+    private static final Resume r3 = new Resume(UUID_3, "name3");
 
     public AbstractStorageTest(Storage storage) {
         this.storage = storage;
@@ -55,7 +52,7 @@ public abstract class AbstractStorageTest {
 
     @Test
     public void update() {
-        Resume newResume = new Resume(UUID_1, NAME_1);
+        Resume newResume = new Resume(UUID_1, "name1");
         storage.update(newResume);
         assertEquals(newResume, storage.get(UUID_1));
     }
@@ -77,15 +74,16 @@ public abstract class AbstractStorageTest {
 
     @Test
     public void getAllSorted() {
-        List<Resume> list = storage.getAllSorted();
-        assertEquals(list, Arrays.asList(r1, r2, r3));
-        assertEquals(3, list.size());
+        List<Resume> actualResumes = storage.getAllSorted();
+        assertEquals(Arrays.asList(r1, r2, r3), actualResumes);
+        assertEquals(3, actualResumes.size());
     }
 
-    @Test
+    @Test(expected = NotExistStorageException.class)
     public void delete() {
         storage.delete(UUID_2);
         assertEquals(2, storage.size());
+        storage.get(UUID_2);
     }
 
     @Test(expected = NotExistStorageException.class)
