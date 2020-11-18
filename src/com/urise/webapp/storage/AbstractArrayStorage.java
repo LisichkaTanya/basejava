@@ -6,7 +6,7 @@ import com.urise.webapp.model.Resume;
 import java.util.Arrays;
 import java.util.List;
 
-public abstract class AbstractArrayStorage extends AbstractStorage {
+public abstract class AbstractArrayStorage extends AbstractStorage<Integer> {
     protected final static int STORAGE_LIMIT = 10_000;
     protected final Resume[] storage = new Resume[STORAGE_LIMIT];
     protected int size = 0;
@@ -14,29 +14,29 @@ public abstract class AbstractArrayStorage extends AbstractStorage {
     protected abstract void addElement(Resume resume, Integer index);
 
     @Override
-    protected boolean isExist(Object searchKey) {
-        return (Integer)searchKey >= 0;
+    protected boolean isExist(Integer index) {
+        return index >= 0;
     }
 
     @Override
-    public void doSave(Resume resume, Object index) {
+    public void doSave(Resume resume, Integer index) {
         if (size >= storage.length) {
             throw new StorageException("Storage overflow", resume.getUuid());
         } else {
-            addElement(resume, (Integer) index);
+            addElement(resume, index);
             size++;
         }
     }
 
     @Override
-    protected void doUpdate(Resume resume, Object index) {
+    protected void doUpdate(Resume resume, Integer index) {
         storage[(Integer) index] = resume;
-        System.out.println("Update '" + storage[(Integer) index] + "' is completed");
+        System.out.println("Update '" + storage[index] + "' is completed");
     }
 
     @Override
-    protected Resume doGet(Object index) {
-        return storage[(Integer) index];
+    protected Resume doGet(Integer index) {
+        return storage[index];
     }
 
     public List<Resume> doCopyAll() {
@@ -44,8 +44,8 @@ public abstract class AbstractArrayStorage extends AbstractStorage {
     }
 
     @Override
-    public void doDelete(Object index) {
-        removeElement((Integer) index);
+    public void doDelete(Integer index) {
+        removeElement(index);
         storage[size - 1] = null;
         size--;
     }
