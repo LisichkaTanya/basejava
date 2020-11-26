@@ -1,7 +1,6 @@
 package com.urise.webapp.model;
 
-import java.util.Objects;
-import java.util.UUID;
+import java.util.*;
 
 /**
  * Initial resume class
@@ -11,6 +10,9 @@ public class Resume implements Comparable<Resume>{
     // Unique identifier
     private final String uuid;
     private final String fullName;
+
+    Map<ContactType, Contact> contacts = new HashMap<>();
+    Map<SectionType, Section> sections = new HashMap<>();
 
     //Автогенерация нашего идентификатора uuid, применяется по-умолчанию, когда uuid не задается при создании объекта
     public Resume(String fullName) {
@@ -24,6 +26,13 @@ public class Resume implements Comparable<Resume>{
         this.fullName = fullName;
     }
 
+    public Contact getContact(ContactType type) {
+        return contacts.get(type);
+    }
+
+    public Section getSection(SectionType type) {
+        return sections.get(type);
+    }
 
     public String getUuid() {
         return uuid;
