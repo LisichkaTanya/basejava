@@ -3,10 +3,10 @@ package com.urise.webapp.model;
 import java.util.List;
 import java.util.Objects;
 
-public class SectionList extends Section {
+public class ListSection extends AbstractSection {
     private final List<String> paragraphs;
 
-    public SectionList(List<String> paragraphs) {
+    public ListSection(List<String> paragraphs) {
         Objects.requireNonNull(paragraphs, "paragraphs must not be null");
         this.paragraphs = paragraphs;
     }
@@ -21,7 +21,7 @@ public class SectionList extends Section {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
 
-        SectionList that = (SectionList) o;
+        ListSection that = (ListSection) o;
 
         return paragraphs.equals(that.paragraphs);
     }

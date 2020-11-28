@@ -11,8 +11,8 @@ public class Resume implements Comparable<Resume>{
     private final String uuid;
     private final String fullName;
 
-    Map<ContactType, Contact> contacts = new HashMap<>();
-    Map<SectionType, Section> sections = new HashMap<>();
+    private Map<ContactType, Contact> contacts = new EnumMap<>(ContactType.class);
+    private Map<SectionType, AbstractSection> sections = new EnumMap<>(SectionType.class);
 
     //Автогенерация нашего идентификатора uuid, применяется по-умолчанию, когда uuid не задается при создании объекта
     public Resume(String fullName) {
@@ -26,11 +26,19 @@ public class Resume implements Comparable<Resume>{
         this.fullName = fullName;
     }
 
+    public void setContacts(Map<ContactType, Contact> contacts) {
+        this.contacts = contacts;
+    }
+
+    public void setSections(Map<SectionType, AbstractSection> sections) {
+        this.sections = sections;
+    }
+
     public Contact getContact(ContactType type) {
         return contacts.get(type);
     }
 
-    public Section getSection(SectionType type) {
+    public AbstractSection getSection(SectionType type) {
         return sections.get(type);
     }
 
@@ -55,13 +63,17 @@ public class Resume implements Comparable<Resume>{
         Resume resume = (Resume) o;
 
         if (!uuid.equals(resume.uuid)) return false;
-        return fullName.equals(resume.fullName);
+        if (!fullName.equals(resume.fullName)) return false;
+        if (!contacts.equals(resume.contacts)) return false;
+        return sections.equals(resume.sections);
     }
 
     @Override
     public int hashCode() {
         int result = uuid.hashCode();
         result = 31 * result + fullName.hashCode();
+        result = 31 * result + contacts.hashCode();
+        result = 31 * result + sections.hashCode();
         return result;
     }
 
