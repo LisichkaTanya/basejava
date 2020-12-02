@@ -12,25 +12,25 @@ public class ResumeTestData {
     public static void main(String[] args) {
         Resume resume1 = new Resume("001", "Григорий Кислин");
 
-        Contact phoneNumber = new Contact("+7(921) 855-0482");
-        Contact skype = new Contact("grigory.kislin");
+        String phoneNumber = "+7(921) 855-0482";
+        String skype = "grigory.kislin";
 
-        Map<ContactType, Contact> contacts = new EnumMap<>(ContactType.class);
+        Map<ContactType, String> contacts = new EnumMap<>(ContactType.class);
         contacts.put(ContactType.PHONE_NUMBER, phoneNumber);
         contacts.put(ContactType.SKYPE, skype);
 
 
-        Organization RIT_Center = new Organization("RIT Center", "Java архитектор",
+        Organization RIT_Center = new Organization("RIT Center",null, "Java архитектор",
                 LocalDate.of(2012,04,1), LocalDate.of(2014, 10, 1),
                 "Организация процесса разработки системы ERP для разных окружений: релизная политика, версионирование, ведение CI (Jenkins), миграция базы (кастомизация Flyway), конфигурирование системы (pgBoucer, Nginx), AAA via SSO. Архитектура БД и серверной части системы. Разработка интергационных сервисов: CMIS, BPMN2, 1C (WebServices), сервисов общего назначения (почта, экспорт в pdf, doc, html). Интеграция Alfresco JLAN для online редактирование из браузера документов MS Office. Maven + plugin development, Ant, Apache Commons, Spring security, Spring MVC, Tomcat,WSO2, xcmis, OpenCmis, Bonita, Python scripting, Unix shell remote scripting via ssh tunnels, PL/Python");
 
-        Organization Wrike = new Organization("Wrike", "Старший разработчик (backend)",
+        Organization Wrike = new Organization("Wrike",null, "Старший разработчик (backend)",
                 LocalDate.of(2014,10,1), LocalDate.of(2016,01,1), "Проектирование и разработка онлайн платформы управления проектами Wrike (Java 8 API, Maven, Spring, MyBatis, Guava, Vaadin, PostgreSQL, Redis). Двухфакторная аутентификация, авторизация по OAuth1, OAuth2, JWT SSO.");
 
-        Organization Luxoft = new Organization("Luxoft", "Курс \"Объектно-ориентированный анализ ИС. Концептуальное моделирование на UML.\"",
+        Organization Luxoft = new Organization("Luxoft",null, "Курс \"Объектно-ориентированный анализ ИС. Концептуальное моделирование на UML.\"",
                 LocalDate.of(2011,03,1), LocalDate.of(2011,04,1),null);
 
-        Organization Coursera = new Organization("Coursera", "\"Functional Programming Principles in Scala\" by Martin Odersky",
+        Organization Coursera = new Organization("Coursera",null, "\"Functional Programming Principles in Scala\" by Martin Odersky",
                 LocalDate.of(2013, 03, 1), LocalDate.of(2013, 05, 1), null);
 
         List<Organization> work = new ArrayList<>();
@@ -68,7 +68,7 @@ public class ResumeTestData {
         resume1.setSections(sections);
 
         System.out.println(resume1);
-        for(Map.Entry<ContactType, Contact> pair : contacts.entrySet()) {
+        for(Map.Entry<ContactType, String> pair : contacts.entrySet()) {
             System.out.println(pair.getKey().getTitle() + ": " + pair.getValue());
         }
         for(Map.Entry<SectionType, AbstractSection> pair : sections.entrySet()) {

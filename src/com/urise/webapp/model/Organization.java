@@ -4,27 +4,26 @@ import java.time.LocalDate;
 import java.util.Objects;
 
 public class Organization {
-    private final String organizationName;
+    private final Link homePage;
     private final String title;
     private final LocalDate startDate;
     private final LocalDate endDate;
     private final String description;
 
-    public Organization(String organizationName, String title, LocalDate startDate, LocalDate endDate, String description) {
-        Objects.requireNonNull(organizationName, "organization name must not be null");
+    public Organization(String name, String url, String title, LocalDate startDate, LocalDate endDate, String description) {
         Objects.requireNonNull(title, "title must not be null");
         Objects.requireNonNull(startDate, "startDate must not be null");
         Objects.requireNonNull(endDate, "endDate must not be null");
 
-        this.organizationName = organizationName;
+        this.homePage = new Link(name, url);
         this.title = title;
         this.startDate = startDate;
         this.endDate = endDate;
         this.description = description;
     }
 
-    public String getOrganizationName() {
-        return organizationName;
+    public Link getHomePage() {
+        return homePage;
     }
 
     public String getTitle() {
@@ -46,7 +45,7 @@ public class Organization {
     @Override
     public String toString() {
         return "Organization{" +
-                "organizationName='" + organizationName + '\'' +
+                "homePage='" + homePage + '\'' +
                 ", title='" + title + '\'' +
                 ", startDate=" + startDate +
                 ", endDate=" + endDate +
@@ -61,7 +60,7 @@ public class Organization {
 
         Organization that = (Organization) o;
 
-        if (!organizationName.equals(that.organizationName)) return false;
+        if (!homePage.equals(that.homePage)) return false;
         if (!title.equals(that.title)) return false;
         if (!startDate.equals(that.startDate)) return false;
         if (!endDate.equals(that.endDate)) return false;
@@ -70,7 +69,7 @@ public class Organization {
 
     @Override
     public int hashCode() {
-        int result = organizationName.hashCode();
+        int result = homePage.hashCode();
         result = 31 * result + title.hashCode();
         result = 31 * result + startDate.hashCode();
         result = 31 * result + endDate.hashCode();

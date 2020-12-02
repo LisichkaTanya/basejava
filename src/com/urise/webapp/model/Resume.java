@@ -11,7 +11,7 @@ public class Resume implements Comparable<Resume>{
     private final String uuid;
     private final String fullName;
 
-    private Map<ContactType, Contact> contacts = new EnumMap<>(ContactType.class);
+    private Map<ContactType, String> contacts = new EnumMap<>(ContactType.class);
     private Map<SectionType, AbstractSection> sections = new EnumMap<>(SectionType.class);
 
     //Автогенерация нашего идентификатора uuid, применяется по-умолчанию, когда uuid не задается при создании объекта
@@ -26,7 +26,7 @@ public class Resume implements Comparable<Resume>{
         this.fullName = fullName;
     }
 
-    public void setContacts(Map<ContactType, Contact> contacts) {
+    public void setContacts(Map<ContactType, String> contacts) {
         this.contacts = contacts;
     }
 
@@ -34,7 +34,7 @@ public class Resume implements Comparable<Resume>{
         this.sections = sections;
     }
 
-    public Contact getContact(ContactType type) {
+    public String getContact(ContactType type) {
         return contacts.get(type);
     }
 
