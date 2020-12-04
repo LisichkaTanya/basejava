@@ -26,12 +26,12 @@ public class Resume implements Comparable<Resume>{
         this.fullName = fullName;
     }
 
-    public void setContacts(Map<ContactType, String> contacts) {
-        this.contacts = contacts;
+    public void setContact(ContactType type, String value) {
+        contacts.put(type, value);
     }
 
-    public void setSections(Map<SectionType, AbstractSection> sections) {
-        this.sections = sections;
+    public void setSection(SectionType type, AbstractSection section) {
+        sections.put(type, section);
     }
 
     public String getContact(ContactType type) {
@@ -52,7 +52,14 @@ public class Resume implements Comparable<Resume>{
 
     @Override
     public String toString() {
-        return uuid + " (" + fullName + ')';
+        System.out.println(uuid + " (" + fullName + ')');
+        for(Map.Entry<ContactType, String> pair : contacts.entrySet()) {
+            System.out.println(pair.getKey().getTitle() + ": " + pair.getValue());
+        }
+        for(Map.Entry<SectionType, AbstractSection> pair : sections.entrySet()) {
+            System.out.println(pair.getKey().getTitle() + ": " + pair.getValue());
+        }
+        return "";
     }
 
     @Override

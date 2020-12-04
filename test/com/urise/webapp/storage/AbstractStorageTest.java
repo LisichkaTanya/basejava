@@ -10,16 +10,18 @@ import org.junit.Test;
 import java.util.Arrays;
 import java.util.List;
 
+import static com.urise.webapp.ResumeTestData.addResume;
 import static org.junit.Assert.*;
 
 public abstract class AbstractStorageTest {
     protected final Storage storage;
     private static final String UUID_1 = "uuid1";
-    private static final Resume r1 = new Resume(UUID_1, "name1");
+    private static final Resume r1 = addResume(UUID_1, "name1");
     private static final String UUID_2 = "uuid2";
-    private static final Resume r2 = new Resume(UUID_2, "name2");
+    private static final Resume r2 = addResume(UUID_2, "name2");
     private static final String UUID_3 = "uuid3";
-    private static final Resume r3 = new Resume(UUID_3, "name3");
+    private static final Resume r3 = addResume(UUID_3, "name3");
+
 
     public AbstractStorageTest(Storage storage) {
         this.storage = storage;
@@ -39,7 +41,7 @@ public abstract class AbstractStorageTest {
 
     @Test
     public void save() {
-        Resume r4 = new Resume("uuid4","name4");
+        Resume r4 = addResume("uuid4","name4");
         storage.save(r4);
         assertEquals(4, storage.size());
         assertEquals(r4, storage.get("uuid4"));
