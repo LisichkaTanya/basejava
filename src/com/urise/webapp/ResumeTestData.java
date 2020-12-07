@@ -6,10 +6,10 @@ import java.time.Month;
 
 public class ResumeTestData {
     public static void main(String[] args) {
-        System.out.println(addResume("001", "Some Person"));
+        System.out.println(creatResume("001", "Some Person"));
     }
 
-    public static Resume addResume(String uuid, String fullName) {
+    public static Resume creatResume(String uuid, String fullName) {
         Resume resume = new Resume(uuid, fullName);
         resume.setContact(ContactType.PHONE_NUMBER, "phone number");
         resume.setContact(ContactType.SKYPE, "skype");

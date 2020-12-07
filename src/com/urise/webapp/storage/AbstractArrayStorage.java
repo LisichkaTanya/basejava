@@ -30,7 +30,7 @@ public abstract class AbstractArrayStorage extends AbstractStorage<Integer> {
 
     @Override
     protected void doUpdate(Resume resume, Integer index) {
-        storage[(Integer) index] = resume;
+        storage[index] = resume;
         System.out.println("Update '" + storage[index] + "' is completed");
     }
 

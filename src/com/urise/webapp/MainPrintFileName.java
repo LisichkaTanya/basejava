@@ -4,11 +4,11 @@ import java.io.File;
 
 public class MainPrintFileName {
     public static void main(String[] args) {
-        String dirPath = "C:\\Project\\basejava";
-        recursive(dirPath);
+        String dirPath = "..\\basejava";
+        printFileName(dirPath);
     }
 
-    private static void recursive(String dirName) {
+    private static void printFileName(String dirName) {
         File dir = new File(dirName);
         if (!dir.isDirectory()) {
             System.out.println("File: " + dir.getName());
@@ -17,7 +17,7 @@ public class MainPrintFileName {
             File[] list = dir.listFiles();
             if (list != null) {
                 for (File name : list) {
-                    recursive(name.getPath());
+                    printFileName(name.getPath());
                 }
             }
         }
