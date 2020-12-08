@@ -1,12 +1,13 @@
 package com.urise.webapp.model;
 
+import java.io.Serializable;
 import java.util.*;
 
 /**
  * Initial resume class
  */
-public class Resume implements Comparable<Resume>{
-
+public class Resume implements Comparable<Resume>, Serializable {
+    private static final long serialVersionUid = 1L;
     // Unique identifier
     private final String uuid;
     private final String fullName;
@@ -53,10 +54,10 @@ public class Resume implements Comparable<Resume>{
     @Override
     public String toString() {
         System.out.println(uuid + " (" + fullName + ')');
-        for(Map.Entry<ContactType, String> pair : contacts.entrySet()) {
+        for (Map.Entry<ContactType, String> pair : contacts.entrySet()) {
             System.out.println(pair.getKey().getTitle() + ": " + pair.getValue());
         }
-        for(Map.Entry<SectionType, AbstractSection> pair : sections.entrySet()) {
+        for (Map.Entry<SectionType, AbstractSection> pair : sections.entrySet()) {
             System.out.println(pair.getKey().getTitle() + ": " + pair.getValue());
         }
         return "";
