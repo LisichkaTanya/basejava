@@ -11,6 +11,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public abstract class AbstractPathStorage extends AbstractStorage<Path> {
 
@@ -44,7 +45,7 @@ public abstract class AbstractPathStorage extends AbstractStorage<Path> {
         try {
             Files.createFile(path);
         } catch (IOException e) {
-            throw new StorageException("Path create error" + path.getFileName(), path.getParent().toString(), e);
+            throw new StorageException("Path create error" + path, getFileName(path), e);
         }
         doUpdate(resume, path);
     }
@@ -54,7 +55,7 @@ public abstract class AbstractPathStorage extends AbstractStorage<Path> {
         try {
             doWrite(resume, new BufferedOutputStream(Files.newOutputStream(path)));
         } catch (IOException e) {
-            throw new StorageException("File write error", path.getFileName().toString(), e);
+            throw new StorageException("Path write error", getFileName(path), e);
         }
     }
 
@@ -63,22 +64,18 @@ public abstract class AbstractPathStorage extends AbstractStorage<Path> {
         try {
             return doRead(new BufferedInputStream(Files.newInputStream(path)));
         } catch (IOException e) {
-            throw new StorageException("File read error", path.getFileName().toString(), e);
+            throw new StorageException("Path read error", getFileName(path), e);
         }
     }
 
     @Override
     protected List<Resume> doCopyAll() {
-        try {
-            List<Path> pathList = Files.list(directory).collect(Collectors.toList());
-            List<Resume> list = new ArrayList<>(pathList.size());
-            for (Path path : pathList) {
-                list.add(doGet(path));
-            }
-            return list;
-        } catch (IOException e) {
-            throw new StorageException("Directory is not available", directory.getFileName().toString());
+        List<Path> pathList = getListPath().collect(Collectors.toList());
+        List<Resume> list = new ArrayList<>(pathList.size());
+        for (Path path : pathList) {
+            list.add(doGet(path));
         }
+        return list;
     }
 
     @Override
@@ -86,26 +83,29 @@ public abstract class AbstractPathStorage extends AbstractStorage<Path> {
         try {
             Files.delete(path);
         } catch (IOException e) {
-            throw new StorageException("Path delete error", path.getFileName().toString());
+            throw new StorageException("Path delete error", getFileName(path));
         }
     }
 
     @Override
     public void clear() {
-        try {
-            Files.list(directory).forEach(this::doDelete);
-        } catch (IOException e) {
-            throw new StorageException("Path delete error", null, e);
-        }
+        getListPath().forEach(this::doDelete);
     }
 
     @Override
     public int size() {
+        return (int) getListPath().count();
+    }
+
+    private String getFileName(Path path) {
+        return path.getFileName().toString();
+    }
+
+    private Stream<Path> getListPath () {
         try {
-            List<Path> list = Files.list(directory).collect(Collectors.toList());
-            return list.size();
+            return Files.list(directory);
         } catch (IOException e) {
-            throw new StorageException("Directory is not available", directory.getFileName().toString());
+            throw new StorageException("Directory is not available", getFileName(directory));
         }
     }
 }

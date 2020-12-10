@@ -14,7 +14,7 @@ import static com.urise.webapp.ResumeTestData.creatResume;
 import static org.junit.Assert.assertEquals;
 
 public abstract class AbstractStorageTest {
-    protected static final String STORAGE_DIRECTORY = "C:\\Project\\basejava\\storage";
+    protected static final String STORAGE_DIRECTORY = "..\\basejava\\storage";
     protected final Storage storage;
     private static final String UUID_1 = "uuid1";
     private static final Resume r1 = creatResume(UUID_1, "name1");
