@@ -4,7 +4,7 @@ import java.io.Serializable;
 import java.util.Objects;
 
 public class Link implements Serializable {
-    private static final long serialVersionUid = 1L;
+    private static final long serialVersionUID = 1L;
     private final String name;
     private final String url;
 

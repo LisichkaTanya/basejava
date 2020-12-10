@@ -12,7 +12,7 @@ import java.io.ObjectInputStream;
         ListStorageTest.class,
         MapUuidStorageTest.class,
         MapResumeStorageTest.class,
-        ObjectInputStream.class
+        ObjectStreamStorageTest.class
 })
 public class AllStorageTest {
 }

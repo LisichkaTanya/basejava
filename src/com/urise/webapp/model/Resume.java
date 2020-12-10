@@ -7,13 +7,13 @@ import java.util.*;
  * Initial resume class
  */
 public class Resume implements Comparable<Resume>, Serializable {
-    private static final long serialVersionUid = 1L;
+    private static final long serialVersionUID = 1L;
     // Unique identifier
     private final String uuid;
     private final String fullName;
 
-    private Map<ContactType, String> contacts = new EnumMap<>(ContactType.class);
-    private Map<SectionType, AbstractSection> sections = new EnumMap<>(SectionType.class);
+    private final Map<ContactType, String> contacts = new EnumMap<>(ContactType.class);
+    private final Map<SectionType, AbstractSection> sections = new EnumMap<>(SectionType.class);
 
     //Автогенерация нашего идентификатора uuid, применяется по-умолчанию, когда uuid не задается при создании объекта
     public Resume(String fullName) {
