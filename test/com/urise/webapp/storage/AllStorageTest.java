@@ -3,8 +3,6 @@ package com.urise.webapp.storage;
 import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
 
-import java.io.ObjectInputStream;
-
 @RunWith(Suite.class)
 @Suite.SuiteClasses({
         ArrayStorageTest.class,
@@ -12,7 +10,7 @@ import java.io.ObjectInputStream;
         ListStorageTest.class,
         MapUuidStorageTest.class,
         MapResumeStorageTest.class,
-        ObjectStreamStorageTest.class
+        ObjectStreamFileStorageTest.class
 })
 public class AllStorageTest {
 }
