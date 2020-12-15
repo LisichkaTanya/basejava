@@ -2,14 +2,12 @@ package com.urise.webapp.storage;
 
 import com.urise.webapp.exception.StorageException;
 import com.urise.webapp.model.Resume;
-import com.urise.webapp.storage.AbstractStorage;
-import com.urise.webapp.storage.stream.StreamStorage;
+import com.urise.webapp.storage.serialization.StreamSerialization;
 
 import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
@@ -18,10 +16,10 @@ import java.util.stream.Stream;
 public class PathStorage extends AbstractStorage<Path> {
 
     private final Path directory;
-    private final StreamStorage streamStorage;
+    private final StreamSerialization streamSerialization;
 
-    protected PathStorage(String dir, StreamStorage streamStorage) {
-        this.streamStorage = streamStorage;
+    protected PathStorage(String dir, StreamSerialization streamSerialization) {
+        this.streamSerialization = streamSerialization;
         directory = Paths.get(dir);
         Objects.requireNonNull(directory, "directory must not be null");
         if (!Files.isDirectory(directory) || !Files.isWritable(directory)) {
@@ -52,7 +50,7 @@ public class PathStorage extends AbstractStorage<Path> {
     @Override
     protected void doUpdate(Resume resume, Path path) {
         try {
-            streamStorage.doWrite(resume, new BufferedOutputStream(Files.newOutputStream(path)));
+            streamSerialization.doWrite(resume, new BufferedOutputStream(Files.newOutputStream(path)));
         } catch (IOException e) {
             throw new StorageException("Path write error", getFileName(path), e);
         }
@@ -61,7 +59,7 @@ public class PathStorage extends AbstractStorage<Path> {
     @Override
     protected Resume doGet(Path path) {
         try {
-            return streamStorage.doRead(new BufferedInputStream(Files.newInputStream(path)));
+            return streamSerialization.doRead(new BufferedInputStream(Files.newInputStream(path)));
         } catch (IOException e) {
             throw new StorageException("Path read error", getFileName(path), e);
         }
@@ -69,12 +67,7 @@ public class PathStorage extends AbstractStorage<Path> {
 
     @Override
     protected List<Resume> doCopyAll() {
-        List<Path> pathList = getListPath().collect(Collectors.toList());
-        List<Resume> list = new ArrayList<>(pathList.size());
-        for (Path path : pathList) {
-            list.add(doGet(path));
-        }
-        return list;
+        return getListPath().map(this::doGet).collect(Collectors.toList());
     }
 
     @Override

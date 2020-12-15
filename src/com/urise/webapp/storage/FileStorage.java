@@ -2,7 +2,7 @@ package com.urise.webapp.storage;
 
 import com.urise.webapp.exception.StorageException;
 import com.urise.webapp.model.Resume;
-import com.urise.webapp.storage.stream.StreamStorage;
+import com.urise.webapp.storage.serialization.StreamSerialization;
 
 import java.io.*;
 import java.util.ArrayList;
@@ -12,10 +12,10 @@ import java.util.Objects;
 public class FileStorage extends AbstractStorage<File> {
 
     private final File directory;
-    private final StreamStorage streamStorage;
+    private final StreamSerialization streamSerialization;
 
-    protected FileStorage(File directory, StreamStorage streamStorage) {
-        this.streamStorage = streamStorage;
+    protected FileStorage(File directory, StreamSerialization streamSerialization) {
+        this.streamSerialization = streamSerialization;
         Objects.requireNonNull(directory, "directory must not be null");
         if (!directory.isDirectory()) {
             throw new IllegalArgumentException(directory.getAbsolutePath() + "is not directory");
@@ -50,7 +50,7 @@ public class FileStorage extends AbstractStorage<File> {
     @Override
     protected void doUpdate(Resume resume, File file) {
         try {
-            streamStorage.doWrite(resume, new BufferedOutputStream(new FileOutputStream(file)));
+            streamSerialization.doWrite(resume, new BufferedOutputStream(new FileOutputStream(file)));
         } catch (IOException e) {
             throw new StorageException("File write error", file.getName(), e);
         }
@@ -59,7 +59,7 @@ public class FileStorage extends AbstractStorage<File> {
     @Override
     protected Resume doGet(File file) {
         try {
-            return streamStorage.doRead(new BufferedInputStream(new FileInputStream(file)));
+            return streamSerialization.doRead(new BufferedInputStream(new FileInputStream(file)));
         } catch (IOException e) {
             throw new StorageException("File read error", file.getName(), e);
         }
@@ -67,12 +67,8 @@ public class FileStorage extends AbstractStorage<File> {
 
     @Override
     protected List<Resume> doCopyAll() {
-        File[] files = directory.listFiles();
-        if (files == null) {
-            throw new StorageException("Directory is not available", directory.getName());
-        }
-        List<Resume> list = new ArrayList<>(files.length);
-        for (File file : files) {
+        List<Resume> list = new ArrayList<>(getListFiles().length);
+        for (File file : getListFiles()) {
             list.add(doGet(file));
         }
         return list;
@@ -87,20 +83,21 @@ public class FileStorage extends AbstractStorage<File> {
 
     @Override
     public void clear() {
-        File[] files = directory.listFiles();
-        if (files != null) {
-            for (File file : files) {
-                doDelete(file);
-            }
+        for (File file : getListFiles()) {
+            doDelete(file);
         }
     }
 
     @Override
     public int size() {
-        String[] list = directory.list();
-        if (list == null) {
+        return getListFiles().length;
+    }
+
+    private File[] getListFiles() {
+        File[] files = directory.listFiles();
+        if (files == null) {
             throw new StorageException("Directory is not available", directory.getName());
         }
-        return list.length;
+        return files;
     }
 }
