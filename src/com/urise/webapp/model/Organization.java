@@ -1,5 +1,10 @@
 package com.urise.webapp.model;
 
+import com.urise.webapp.util.LocalDateAdapter;
+
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 import java.io.Serializable;
 import java.time.LocalDate;
 import java.time.Month;
@@ -10,10 +15,13 @@ import java.util.Objects;
 import static com.urise.webapp.util.DateUtil.NOW;
 import static com.urise.webapp.util.DateUtil.of;
 
+@XmlAccessorType(XmlAccessType.FIELD)
 public class Organization implements Serializable {
     private static final long serialVersionUID = 1L;
-    private final Link homePage;
-    private final List<Position> positions;
+    private Link homePage;
+    private List<Position> positions;
+
+    public Organization () {}
 
     public Organization(String name, String url, Position... positions) {
         this(new Link(name, url), Arrays.asList(positions));
@@ -55,12 +63,20 @@ public class Organization implements Serializable {
         return result;
     }
 
+    @XmlAccessorType(XmlAccessType.FIELD)
     public static class Position implements Serializable {
         private static final long serialVersionUID = 1L;
-        private final LocalDate startDate;
-        private final LocalDate endDate;
-        private final String title;
-        private final String description;
+
+        @XmlJavaTypeAdapter(LocalDateAdapter.class)
+        private LocalDate startDate;
+
+        @XmlJavaTypeAdapter(LocalDateAdapter.class)
+        private LocalDate endDate;
+
+        private String title;
+        private String description;
+
+        public Position () {}
 
         public Position(int startYear, Month startMonth, String title, String description) {
             this(of(startYear, startMonth), NOW, title, description);
