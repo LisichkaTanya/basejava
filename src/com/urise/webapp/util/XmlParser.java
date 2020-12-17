@@ -13,13 +13,13 @@ public class XmlParser {
 
     public XmlParser(Class... classesToBeBound) {
         try {
-            JAXBContext ctx = JAXBContext.newInstance(classesToBeBound);
+            JAXBContext context = JAXBContext.newInstance(classesToBeBound);
 
-            marshaller = ctx.createMarshaller();
+            marshaller = context.createMarshaller();
             marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
             marshaller.setProperty(Marshaller.JAXB_ENCODING, "UTF-8");
 //            marshaller.setProperty(Marshaller.JAXB_FRAGMENT, true);
-            unmarshaller = ctx.createUnmarshaller();
+            unmarshaller = context.createUnmarshaller();
         } catch (JAXBException e) {
             throw new IllegalStateException(e);
         }

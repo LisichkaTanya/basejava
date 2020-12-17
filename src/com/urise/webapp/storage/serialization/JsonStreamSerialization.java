@@ -1,30 +1,24 @@
 package com.urise.webapp.storage.serialization;
 
-import com.urise.webapp.model.*;
-import com.urise.webapp.util.XmlParser;
+import com.google.gson.stream.JsonReader;
+import com.urise.webapp.model.Resume;
+import com.urise.webapp.util.JsonParser;
 
 import java.io.*;
 import java.nio.charset.StandardCharsets;
 
-public class XmlStreamSerialization implements StreamSerialization {
-    private final XmlParser xmlParser;
-
-    public XmlStreamSerialization() {
-        xmlParser = new XmlParser(Resume.class, Organization.class, Link.class,
-                OrganizationList.class, TextSection.class, ListSection.class, Organization.Position.class);
-    }
-
+public class JsonStreamSerialization implements StreamSerialization {
     @Override
     public void doWrite(Resume resume, OutputStream outputStream) throws IOException {
         try (Writer writer = new OutputStreamWriter(outputStream, StandardCharsets.UTF_8)) {
-            xmlParser.marshall(resume, writer);
+            JsonParser.write(resume, writer);
         }
     }
 
     @Override
     public Resume doRead(InputStream inputStream) throws IOException {
         try (Reader reader = new InputStreamReader(inputStream, StandardCharsets.UTF_8)) {
-            return xmlParser.unmarshall(reader);
+            return JsonParser.read(reader, Resume.class);
         }
     }
 }
