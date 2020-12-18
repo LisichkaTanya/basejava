@@ -1,8 +1,7 @@
 package com.urise.webapp.exception;
 
-import java.io.IOException;
-
 public class StorageException extends RuntimeException {
+    private static final long serialVersionUID = 1L;
     private final String uuid;
 
     public StorageException(String message, String uuid) {
