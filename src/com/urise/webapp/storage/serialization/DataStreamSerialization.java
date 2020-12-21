@@ -34,10 +34,10 @@ public class DataStreamSerialization implements StreamSerialization {
                         break;
                     case ACHIEVEMENT:
                     case QUALIFICATIONS:
+                        dos.writeInt((((ListSection) section).getParagraphs().size()));
                         for (String paragraph : ((ListSection) section).getParagraphs()) {
                             dos.writeUTF(paragraph);
                         }
-                        dos.writeInt((((ListSection) section).getParagraphs().size()));
                         break;
                     case EDUCATION:
                     case EXPERIENCE:
@@ -70,7 +70,7 @@ public class DataStreamSerialization implements StreamSerialization {
                     case ACHIEVEMENT:
                     case QUALIFICATIONS:
                         int sizeListSection = dis.readInt();
-                        List<String> ls = new ArrayList<>();
+                        List<String> ls = new ArrayList<>(sizeListSection);
                         for (int j = 0; j < sizeListSection; j++) {
                             ls.add(dis.readUTF());
                         }

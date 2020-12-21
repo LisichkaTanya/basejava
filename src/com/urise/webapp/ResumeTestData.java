@@ -21,8 +21,8 @@ public class ResumeTestData {
 
         resume.setSection(SectionType.PERSONAL, new TextSection("personal"));
         resume.setSection(SectionType.OBJECTIVE, new TextSection("objective"));
-//        resume.setSection(SectionType.ACHIEVEMENT, new ListSection("achievement1", "achievement2"));
-//        resume.setSection(SectionType.QUALIFICATIONS, new ListSection("qualification1", "qualification2"));
+        resume.setSection(SectionType.ACHIEVEMENT, new ListSection("achievement1", "achievement2"));
+        resume.setSection(SectionType.QUALIFICATIONS, new ListSection("qualification1", "qualification2"));
 //        resume.setSection(SectionType.EXPERIENCE, new OrganizationList(
 //                new Organization("Job1", "www.job1.ru",
 //                        new Organization.Position(2017, Month.MARCH, 2019, Month.MAY, "specialist", "some description")),
