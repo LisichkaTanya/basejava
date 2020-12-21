@@ -1,10 +1,10 @@
 package com.urise.webapp.storage.serialization;
 
-import com.urise.webapp.exception.StorageException;
-import com.urise.webapp.model.ContactType;
-import com.urise.webapp.model.Resume;
+import com.urise.webapp.model.*;
 
 import java.io.*;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 public class DataStreamSerialization implements StreamSerialization {
@@ -20,6 +20,30 @@ public class DataStreamSerialization implements StreamSerialization {
                 dos.writeUTF(pair.getKey().name());
                 dos.writeUTF(pair.getValue());
             }
+
+            Map<SectionType, AbstractSection> sections = resume.getSections();
+            dos.writeInt(sections.size());
+            for (Map.Entry<SectionType, AbstractSection> pair : sections.entrySet()) {
+                SectionType type = pair.getKey();
+                AbstractSection section = pair.getValue();
+                dos.writeUTF(type.name());
+                switch (type) {
+                    case PERSONAL:
+                    case OBJECTIVE:
+                        dos.writeUTF(((TextSection) section).getInformation());
+                        break;
+                    case ACHIEVEMENT:
+                    case QUALIFICATIONS:
+                        for (String paragraph : ((ListSection) section).getParagraphs()) {
+                            dos.writeUTF(paragraph);
+                        }
+                        dos.writeInt((((ListSection) section).getParagraphs().size()));
+                        break;
+                    case EDUCATION:
+                    case EXPERIENCE:
+                        break;
+                }
+            }
         }
 
     }
@@ -30,9 +54,29 @@ public class DataStreamSerialization implements StreamSerialization {
             String uuid = dis.readUTF();
             String fullName = dis.readUTF();
             Resume resume = new Resume(uuid, fullName);
-            int size = dis.readInt();
-            for (int i = 0; i < size; i++) {
+            int sizeContacts = dis.readInt();
+            for (int i = 0; i < sizeContacts; i++) {
                 resume.setContact(ContactType.valueOf(dis.readUTF()), dis.readUTF());
+            }
+
+            int sizeSections = dis.readInt();
+            for (int i = 0; i < sizeSections; i++) {
+                SectionType type = SectionType.valueOf(dis.readUTF());
+                switch (type) {
+                    case PERSONAL:
+                    case OBJECTIVE:
+                        resume.setSection(type, new TextSection (dis.readUTF()));
+                        break;
+                    case ACHIEVEMENT:
+                    case QUALIFICATIONS:
+                        int sizeListSection = dis.readInt();
+                        List<String> ls = new ArrayList<>();
+                        for (int j = 0; j < sizeListSection; j++) {
+                            ls.add(dis.readUTF());
+                        }
+                        resume.setSection(type, new ListSection(ls));
+                        break;
+                }
             }
 
             return resume;

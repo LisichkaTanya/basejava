@@ -21,7 +21,8 @@ public class Organization implements Serializable {
     private Link homePage;
     private List<Position> positions;
 
-    public Organization () {}
+    public Organization() {
+    }
 
     public Organization(String name, String url, Position... positions) {
         this(new Link(name, url), Arrays.asList(positions));
@@ -63,6 +64,7 @@ public class Organization implements Serializable {
         return result;
     }
 
+
     @XmlAccessorType(XmlAccessType.FIELD)
     public static class Position implements Serializable {
         private static final long serialVersionUID = 1L;
@@ -76,7 +78,8 @@ public class Organization implements Serializable {
         private String title;
         private String description;
 
-        public Position () {}
+        public Position() {
+        }
 
         public Position(int startYear, Month startMonth, String title, String description) {
             this(of(startYear, startMonth), NOW, title, description);

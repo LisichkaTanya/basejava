@@ -23,6 +23,10 @@ public class ListSection extends AbstractSection {
         this.paragraphs = paragraphs;
     }
 
+    public List<String> getParagraphs() {
+        return paragraphs;
+    }
+
     @Override
     public String toString() {
         return paragraphs.toString();
