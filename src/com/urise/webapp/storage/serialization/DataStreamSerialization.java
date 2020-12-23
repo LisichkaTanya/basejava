@@ -5,8 +5,8 @@ import com.urise.webapp.model.*;
 import java.io.*;
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
-import java.util.Map;
 
 public class DataStreamSerialization implements StreamSerialization {
 
@@ -15,18 +15,14 @@ public class DataStreamSerialization implements StreamSerialization {
         try (DataOutputStream dos = new DataOutputStream(outputStream)) {
             dos.writeUTF(resume.getUuid());
             dos.writeUTF(resume.getFullName());
-            Map<ContactType, String> contacts = resume.getContacts();
-            dos.writeInt(contacts.size());
-            for (Map.Entry<ContactType, String> pair : contacts.entrySet()) {
-                dos.writeUTF(pair.getKey().name());
-                dos.writeUTF(pair.getValue());
-            }
+            writeCollection(dos, resume.getContacts().entrySet(), contacts -> {
+                dos.writeUTF(contacts.getKey().name());
+                dos.writeUTF(contacts.getValue());
+            });
 
-            Map<SectionType, AbstractSection> sections = resume.getSections();
-            dos.writeInt(sections.size());
-            for (Map.Entry<SectionType, AbstractSection> pair : sections.entrySet()) {
-                SectionType type = pair.getKey();
-                AbstractSection section = pair.getValue();
+            writeCollection(dos, resume.getSections().entrySet(), sections -> {
+                SectionType type = sections.getKey();
+                AbstractSection section = sections.getValue();
                 dos.writeUTF(type.name());
                 switch (type) {
                     case PERSONAL:
@@ -35,29 +31,24 @@ public class DataStreamSerialization implements StreamSerialization {
                         break;
                     case ACHIEVEMENT:
                     case QUALIFICATIONS:
-                        dos.writeInt((((ListSection) section).getParagraphs().size()));
-                        for (String paragraph : ((ListSection) section).getParagraphs()) {
-                            dos.writeUTF(paragraph);
-                        }
+                        writeCollection(dos, ((ListSection) section).getParagraphs(), dos::writeUTF);
                         break;
                     case EDUCATION:
                     case EXPERIENCE:
-                        dos.writeInt(((OrganizationList) section).getOrganisations().size());
-                        for (Organization organization : ((OrganizationList) section).getOrganisations()) {
-                            dos.writeUTF(organization.getHomePage().getName());
-                            dos.writeUTF(organization.getHomePage().getUrl());
+                        writeCollection(dos, ((OrganizationList) section).getOrganisations(), organizations -> {
+                            dos.writeUTF(organizations.getHomePage().getName());
+                            dos.writeUTF(organizations.getHomePage().getUrl());
+                            writeCollection(dos, organizations.getPositions(), positions -> {
+                                writeDate(dos, positions.getStartDate());
+                                writeDate(dos, positions.getEndDate());
+                                dos.writeUTF(positions.getTitle());
+                                dos.writeUTF(positions.getDescription());
+                            });
 
-                            dos.writeInt(organization.getPositions().size());
-                            for (Organization.Position position : organization.getPositions()) {
-                                writeDate(dos, position.getStartDate());
-                                writeDate(dos, position.getEndDate());
-                                dos.writeUTF(position.getTitle());
-                                dos.writeUTF(position.getDescription());
-                            }
-                        }
+                        });
                         break;
                 }
-            }
+            });
         }
     }
 
@@ -67,10 +58,7 @@ public class DataStreamSerialization implements StreamSerialization {
             String uuid = dis.readUTF();
             String fullName = dis.readUTF();
             Resume resume = new Resume(uuid, fullName);
-            int sizeContacts = dis.readInt();
-            for (int i = 0; i < sizeContacts; i++) {
-                resume.setContact(ContactType.valueOf(dis.readUTF()), dis.readUTF());
-            }
+            readComponent(dis, () -> resume.setContact(ContactType.valueOf(dis.readUTF()), dis.readUTF()));
 
             int sizeSections = dis.readInt();
             for (int i = 0; i < sizeSections; i++) {
@@ -82,33 +70,18 @@ public class DataStreamSerialization implements StreamSerialization {
                         break;
                     case ACHIEVEMENT:
                     case QUALIFICATIONS:
-                        int sizeListSection = dis.readInt();
-                        List<String> ls = new ArrayList<>(sizeListSection);
-                        for (int j = 0; j < sizeListSection; j++) {
-                            ls.add(dis.readUTF());
-                        }
-                        resume.setSection(type, new ListSection(ls));
+                        resume.setSection(type, new ListSection(readCollection(dis, dis::readUTF)));
                         break;
                     case EXPERIENCE:
                     case EDUCATION:
-                        int sizeOrganizationList = dis.readInt();
-                        List<Organization> ol = new ArrayList<>(sizeOrganizationList);
-                        for (int j = 0; j < sizeOrganizationList; j++) {
-                            Link link = new Link(dis.readUTF(), dis.readUTF());
-                            int sizePositionList = dis.readInt();
-                            List<Organization.Position> positionList = new ArrayList<>(sizePositionList);
-                            for (int l = 0; l < sizePositionList; l++) {
-                                positionList.add(new Organization.Position(
-                                        readDate(dis), readDate(dis),
-                                        dis.readUTF(), dis.readUTF()));
-                            }
-                            ol.add(new Organization(link, positionList));
-                        }
-                        resume.setSection(type, new OrganizationList(ol));
+                        resume.setSection(type, new OrganizationList(
+                                readCollection(dis, () -> new Organization(new Link(dis.readUTF(), dis.readUTF()),
+                                        readCollection(dis, () -> new Organization.Position(
+                                                readDate(dis), readDate(dis),
+                                                dis.readUTF(), dis.readUTF()))))));
                         break;
                 }
             }
-
             return resume;
         }
     }
@@ -120,5 +93,43 @@ public class DataStreamSerialization implements StreamSerialization {
 
     private LocalDate readDate(DataInputStream dis) throws IOException {
         return LocalDate.of(dis.readInt(), dis.readInt(), 1);
+    }
+
+    @FunctionalInterface
+    private interface WriteElementCollection<T> {
+        void accept(T t) throws IOException;
+    }
+
+    private <T> void writeCollection(DataOutputStream dos, Collection<T> collection, WriteElementCollection<T> writer) throws IOException {
+        dos.writeInt(collection.size());
+        for (T t : collection) {
+            writer.accept(t);
+        }
+    }
+
+    @FunctionalInterface
+    private interface ReadElementCollection<T> {
+        T read() throws IOException;
+    }
+
+    private <T> List<T> readCollection(DataInputStream dis, ReadElementCollection<T> reader) throws IOException {
+        int size = dis.readInt();
+        List<T> list = new ArrayList<>(size);
+        for (int i = 0; i < size; i++) {
+            list.add(reader.read());
+        }
+        return list;
+    }
+
+    @FunctionalInterface
+    private interface ReadElement {
+        void read() throws IOException;
+    }
+
+    private void readComponent(DataInputStream dis, ReadElement reader) throws IOException {
+        int size = dis.readInt();
+        for (int i = 0; i < size; i++) {
+            reader.read();
+        }
     }
 }
