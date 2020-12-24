@@ -15,14 +15,14 @@ public class DataStreamSerialization implements StreamSerialization {
         try (DataOutputStream dos = new DataOutputStream(outputStream)) {
             dos.writeUTF(resume.getUuid());
             dos.writeUTF(resume.getFullName());
-            writeCollection(dos, resume.getContacts().entrySet(), contacts -> {
-                dos.writeUTF(contacts.getKey().name());
-                dos.writeUTF(contacts.getValue());
+            writeCollection(dos, resume.getContacts().entrySet(), entry -> {
+                dos.writeUTF(entry.getKey().name());
+                dos.writeUTF(entry.getValue());
             });
 
-            writeCollection(dos, resume.getSections().entrySet(), sections -> {
-                SectionType type = sections.getKey();
-                AbstractSection section = sections.getValue();
+            writeCollection(dos, resume.getSections().entrySet(), entry -> {
+                SectionType type = entry.getKey();
+                AbstractSection section = entry.getValue();
                 dos.writeUTF(type.name());
                 switch (type) {
                     case PERSONAL:
@@ -35,14 +35,16 @@ public class DataStreamSerialization implements StreamSerialization {
                         break;
                     case EDUCATION:
                     case EXPERIENCE:
-                        writeCollection(dos, ((OrganizationList) section).getOrganisations(), organizations -> {
-                            dos.writeUTF(organizations.getHomePage().getName());
-                            dos.writeUTF(organizations.getHomePage().getUrl());
-                            writeCollection(dos, organizations.getPositions(), positions -> {
-                                writeDate(dos, positions.getStartDate());
-                                writeDate(dos, positions.getEndDate());
-                                dos.writeUTF(positions.getTitle());
-                                dos.writeUTF(positions.getDescription());
+
+                        writeCollection(dos, ((OrganizationList) section).getOrganisations(), organization -> {
+                            Link homePage = organization.getHomePage();
+                            dos.writeUTF(homePage.getName());
+                            dos.writeUTF(homePage.getUrl());
+                            writeCollection(dos, organization.getPositions(), position -> {
+                                writeDate(dos, position.getStartDate());
+                                writeDate(dos, position.getEndDate());
+                                dos.writeUTF(position.getTitle());
+                                dos.writeUTF(position.getDescription());
                             });
 
                         });
