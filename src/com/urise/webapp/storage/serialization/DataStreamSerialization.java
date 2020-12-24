@@ -59,30 +59,30 @@ public class DataStreamSerialization implements StreamSerialization {
             String fullName = dis.readUTF();
             Resume resume = new Resume(uuid, fullName);
             readComponent(dis, () -> resume.setContact(ContactType.valueOf(dis.readUTF()), dis.readUTF()));
-
-            int sizeSections = dis.readInt();
-            for (int i = 0; i < sizeSections; i++) {
-                SectionType type = SectionType.valueOf(dis.readUTF());
-                switch (type) {
-                    case PERSONAL:
-                    case OBJECTIVE:
-                        resume.setSection(type, new TextSection(dis.readUTF()));
-                        break;
-                    case ACHIEVEMENT:
-                    case QUALIFICATIONS:
-                        resume.setSection(type, new ListSection(readCollection(dis, dis::readUTF)));
-                        break;
-                    case EXPERIENCE:
-                    case EDUCATION:
-                        resume.setSection(type, new OrganizationList(
-                                readCollection(dis, () -> new Organization(new Link(dis.readUTF(), dis.readUTF()),
-                                        readCollection(dis, () -> new Organization.Position(
-                                                readDate(dis), readDate(dis),
-                                                dis.readUTF(), dis.readUTF()))))));
-                        break;
-                }
-            }
+            readComponent(dis, () -> readSectionType(dis, resume));
             return resume;
+        }
+    }
+
+    private void readSectionType(DataInputStream dis, Resume resume) throws IOException {
+        SectionType type = SectionType.valueOf(dis.readUTF());
+        switch (type) {
+            case PERSONAL:
+            case OBJECTIVE:
+                resume.setSection(type, new TextSection(dis.readUTF()));
+                break;
+            case ACHIEVEMENT:
+            case QUALIFICATIONS:
+                resume.setSection(type, new ListSection(readCollection(dis, dis::readUTF)));
+                break;
+            case EXPERIENCE:
+            case EDUCATION:
+                resume.setSection(type, new OrganizationList(
+                        readCollection(dis, () -> new Organization(new Link(dis.readUTF(), dis.readUTF()),
+                                readCollection(dis, () -> new Organization.Position(
+                                        readDate(dis), readDate(dis),
+                                        dis.readUTF(), dis.readUTF()))))));
+                break;
         }
     }
 
