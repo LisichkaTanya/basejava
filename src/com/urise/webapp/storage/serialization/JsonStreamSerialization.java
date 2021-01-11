@@ -1,6 +1,5 @@
 package com.urise.webapp.storage.serialization;
 
-import com.google.gson.stream.JsonReader;
 import com.urise.webapp.model.Resume;
 import com.urise.webapp.util.JsonParser;
 
