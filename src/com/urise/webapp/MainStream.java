@@ -25,7 +25,7 @@ public class MainStream {
         return Arrays.stream(values)
                 .distinct()
                 .sorted()
-                .reduce(0, (x, y) -> Integer.parseInt(x + "" + y));
+                .reduce(0, (x, y) -> x * 10 + y);
     }
 
     /*
