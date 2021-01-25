@@ -1,5 +1,7 @@
 package com.urise.webapp.storage;
 
+import com.google.gson.internal.$Gson$Preconditions;
+import com.urise.webapp.Config;
 import com.urise.webapp.exception.ExistStorageException;
 import com.urise.webapp.exception.NotExistStorageException;
 import com.urise.webapp.model.Resume;
@@ -7,6 +9,7 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
+import java.io.File;
 import java.util.Arrays;
 import java.util.List;
 
@@ -14,7 +17,7 @@ import static com.urise.webapp.ResumeTestData.creatResume;
 import static org.junit.Assert.assertEquals;
 
 public abstract class AbstractStorageTest {
-    protected static final String STORAGE_DIRECTORY = "..\\basejava\\storage";
+    protected static final File STORAGE_DIRECTORY = Config.getInstance().getStorageDir();
     protected final Storage storage;
     private static final String UUID_1 = "uuid1";
     private static final Resume r1 = creatResume(UUID_1, "name1");

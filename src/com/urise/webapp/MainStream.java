@@ -13,6 +13,7 @@ public class MainStream {
 
         List<Integer> list1 = new ArrayList<>(Arrays.asList(1, 4, 5, 6, 7));
         System.out.println(oddOrEven(list1));
+        System.out.println(oddOrEven(Arrays.asList(9, 8)));
     }
 
     /*
