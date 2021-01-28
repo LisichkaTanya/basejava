@@ -10,7 +10,9 @@ import org.junit.Before;
 import org.junit.Test;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 import static com.urise.webapp.ResumeTestData.creatResume;
@@ -81,7 +83,9 @@ public abstract class AbstractStorageTest {
     @Test
     public void getAllSorted() {
         List<Resume> actualResumes = storage.getAllSorted();
-        assertEquals(Arrays.asList(r1, r2, r3), actualResumes);
+        List<Resume> expectedResumes = new ArrayList<>(Arrays.asList(r1, r2, r3));
+        Collections.sort(expectedResumes);
+        assertEquals(expectedResumes, actualResumes);
         assertEquals(3, actualResumes.size());
     }
 
