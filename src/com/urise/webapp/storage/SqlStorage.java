@@ -30,9 +30,10 @@ public class SqlStorage implements Storage {
     public void update(Resume resume) {
         sqlHelper.execute("UPDATE resume SET full_name = ? WHERE uuid = ?", ps -> {
             ps.setString(1, resume.getFullName());
-            ps.setString(2, resume.getUuid());
+            String uuid = resume.getUuid();
+            ps.setString(2, uuid);
             if (ps.executeUpdate() == 0) {
-                throw new NotExistStorageException(resume.getUuid());
+                throw new NotExistStorageException(uuid);
             }
             return null;
         });
@@ -52,7 +53,7 @@ public class SqlStorage implements Storage {
 
     @Override
     public List<Resume> getAllSorted() {
-        return sqlHelper.execute("SELECT trim(uuid) uuid, full_name FROM resume ORDER BY uuid", ps -> {
+        return sqlHelper.execute("SELECT uuid, full_name FROM resume ORDER BY full_name", ps -> {
             ResultSet rs = ps.executeQuery();
             List<Resume> resumes = new ArrayList<>();
             while (rs.next()) {

@@ -1,6 +1,5 @@
 package com.urise.webapp.storage;
 
-import com.google.gson.internal.$Gson$Preconditions;
 import com.urise.webapp.Config;
 import com.urise.webapp.exception.ExistStorageException;
 import com.urise.webapp.exception.NotExistStorageException;
@@ -10,10 +9,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import java.io.File;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 
 import static com.urise.webapp.ResumeTestData.creatResume;
 import static org.junit.Assert.assertEquals;
@@ -21,11 +17,11 @@ import static org.junit.Assert.assertEquals;
 public abstract class AbstractStorageTest {
     protected static final File STORAGE_DIRECTORY = Config.getInstance().getStorageDir();
     protected final Storage storage;
-    private static final String UUID_1 = "uuid1";
+    private static final String UUID_1 = UUID.randomUUID().toString();
     private static final Resume r1 = creatResume(UUID_1, "name1");
-    private static final String UUID_2 = "uuid2";
+    private static final String UUID_2 = UUID.randomUUID().toString();;
     private static final Resume r2 = creatResume(UUID_2, "name2");
-    private static final String UUID_3 = "uuid3";
+    private static final String UUID_3 = UUID.randomUUID().toString();;
     private static final Resume r3 = creatResume(UUID_3, "name3");
 
 
@@ -47,10 +43,11 @@ public abstract class AbstractStorageTest {
 
     @Test
     public void save() {
-        Resume r4 = creatResume("uuid4","name4");
+        String uuid = UUID.randomUUID().toString();
+        Resume r4 = creatResume(uuid,"name4");
         storage.save(r4);
         assertEquals(4, storage.size());
-        assertEquals(r4, storage.get("uuid4"));
+        assertEquals(r4, storage.get(uuid));
     }
 
     @Test(expected = ExistStorageException.class)
