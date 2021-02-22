@@ -20,21 +20,23 @@ public class SqlStorage implements Storage {
 
     @Override
     public void save(Resume resume) {
-        sqlHelper.<Void>execute("INSERT INTO resume (uuid, full_name) VALUES (?, ?)", ps -> {
-            ps.setString(1, resume.getUuid());
-            ps.setString(2, resume.getFullName());
-            ps.execute();
+        sqlHelper.transactionalExecute(connection -> {
+            try (PreparedStatement ps = connection.prepareStatement("INSERT INTO resume (uuid, full_name) VALUES (?, ?)")) {
+                ps.setString(1, resume.getUuid());
+                ps.setString(2, resume.getFullName());
+                ps.execute();
+            }
+            try (PreparedStatement ps = connection.prepareStatement("INSERT INTO contact (resume_uuid, type, value) VALUES (?, ?, ?)")) {
+                for (Map.Entry<ContactType, String> entry : resume.getContacts().entrySet()) {
+                    ps.setString(1, resume.getUuid());
+                    ps.setString(2, entry.getKey().name());
+                    ps.setString(3, entry.getValue());
+                    ps.addBatch();
+                }
+                ps.executeBatch();
+            }
             return null;
         });
-        for (Map.Entry<ContactType, String> entry : resume.getContacts().entrySet()) {
-            sqlHelper.<Void>execute("INSERT INTO contact (resume_uuid, type, value) VALUES (?, ?, ?)", ps -> {
-                ps.setString(1, resume.getUuid());
-                ps.setString(2, entry.getKey().name());
-                ps.setString(3, entry.getValue());
-                ps.execute();
-                return null;
-            });
-        }
     }
 
     @Override
