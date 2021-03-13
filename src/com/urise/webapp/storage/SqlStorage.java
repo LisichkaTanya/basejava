@@ -72,7 +72,7 @@ public class SqlStorage implements Storage {
             return sqlHelper.execute("" +
                     "    SELECT * FROM resume r" +
                     " LEFT JOIN contact c ON r.uuid = c.resume_uuid" +
-                    "  ORDER BY full_name", ps -> {
+                    "  ORDER BY full_name, uuid", ps -> {
                 ResultSet rs = ps.executeQuery();
                 Map<String, Resume> resumes = new LinkedHashMap<>();
                 while (rs.next()) {
